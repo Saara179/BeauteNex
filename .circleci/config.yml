@@ -27,29 +27,29 @@
 
 
 version: 2.1
-
 jobs: 
- build:
-  docker:
-    - image:  cimg/node:16.20.1-browsers
-
-  steps:
-    - checkout
-    - run:
-       name: installing Google Chrome
-       command: |
-         wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-         sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-         sudo apt-get update
-         sudo apt-get install google-chrome-stable --allow-unauthenticated
-    - run:
-       name: installing automation framework
-       command: |
-         npm install
-    - run:
-       name: running tests
-       command: |
-         npm run wdio
-
-         
-
+  build:
+    docker:
+      #- image:  cimg/node:16.20.1-browsers
+      - image:  circleci/node:16
+    steps:
+      - checkout
+      # - run:
+      #     name: installing Google Chrome
+      #     command: |
+      #       wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+      #       sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+      #       sudo apt-get update
+      #       sudo apt-get install google-chrome-stable --allow-unauthenticated
+      - run:
+          name: installing automation framework
+          command: |
+            npm install --save
+      - run:
+          name: running tests
+          command: |
+            npm run wdio
+workflows:
+  build_tests:
+    jobs:
+      - build
